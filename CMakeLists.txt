@@ -85,7 +85,7 @@ else()
         )
 
     else()
-      message(FATAL_ERROR "CPM external libuv: Python is required on Windows for gyp and libuv.")
+      message(FATAL_ERROR "CPM external libuv: Python 2.6 or 2.7 is required on Windows for gyp and libuv.")
     endif()
   else()
     message(FATAL_ERROR "CPM libuv: Unrecognized platform.")
