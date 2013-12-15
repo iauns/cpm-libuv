@@ -38,9 +38,10 @@ CPM_InitModule(${CPM_MODULE_NAME})
 # External project
 #------------------------------------------------------------------------------
 
+include(ExternalProject)
+set(EP_TARGET_NAME LIBUV_LIB_EP)
+
 if (UNIX)
-  include(ExternalProject)
-  set(EP_TARGET_NAME LIBUV_LIB_EP)
   ExternalProject_Add(${EP_TARGET_NAME}
     GIT_REPOSITORY "https://github.com/joyent/libuv.git"
     GIT_TAG "v0.11.16"
@@ -71,8 +72,21 @@ if (UNIX)
   CPM_ExportAdditionalIncludeDir("${SOURCE_DIR}/include")
 else()
   if (WIN32)
-    # TODO: Ensure python is present on the system and use gyp to build.
-    message(FATAL_ERROR "Windows is supported by libuv, but it is not implemented in CPM's libuv external yet.")
+    find_program(PYTHON "python")
+    if (PYTHON)
+      ExternalProject_Add(${EP_TARGET_NAME}
+        GIT_REPOSITORY "https://github.com/joyent/libuv.git"
+        GIT_TAG "v0.11.16"
+        CONFIGURE_COMMAND ""
+        PATCH_COMMAND ""
+        INSTALL_DIR ""
+        BUILD_COMMAND "vcbuild.bat"
+        BUILD_IN_SOURCE 1
+        )
+
+    else()
+      message(FATAL_ERROR "CPM external libuv: Python is required on Windows for gyp and libuv.")
+    endif()
   else()
     message(FATAL_ERROR "CPM libuv: Unrecognized platform.")
   endif()
