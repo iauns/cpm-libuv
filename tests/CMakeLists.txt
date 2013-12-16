@@ -4,7 +4,7 @@ else()
   cmake_minimum_required(VERSION 2.8.7 FATAL_ERROR)
 endif()
 
-project(TestMongo)
+project(TestLibUV)
 
 #-----------------------------------------------------------------------
 # C++11
