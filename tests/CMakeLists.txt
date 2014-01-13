@@ -25,6 +25,15 @@ find_package(Git)
 if(NOT GIT_FOUND)
   message(FATAL_ERROR "CPM requires Git.")
 endif()
+if ((NOT DEFINED CPM_MODULE_CACHE_DIR) AND (NOT "$ENV{CPM_CACHE_DIR}" STREQUAL ""))
+  set(CPM_MODULE_CACHE_DIR "$ENV{CPM_CACHE_DIR}")
+endif()
+if ((NOT EXISTS ${CPM_DIR}/CPM.cmake) AND (DEFINED CPM_MODULE_CACHE_DIR))
+  if (EXISTS "${CPM_MODULE_CACHE_DIR}/github_iauns_cpm")
+    message(STATUS "Found cached version of CPM.")
+    file(COPY "${CPM_MODULE_CACHE_DIR}/github_iauns_cpm/" DESTINATION ${CPM_DIR})
+  endif()
+endif()
 if (NOT EXISTS ${CPM_DIR}/CPM.cmake)
   message(STATUS "Cloning repo (https://github.com/iauns/cpm)")
   execute_process(
@@ -44,7 +53,7 @@ CPM_AddModule("libuv"
 # ++ EXTERNAL-MODULE: Google Test
 CPM_AddModule("google_test"
   GIT_REPOSITORY "https://github.com/iauns/cpm-google-test"
-  GIT_TAG "1.0.1"
+  GIT_TAG "1.0.2"
   USE_EXISTING_VER TRUE)
 
 CPM_Finish()
